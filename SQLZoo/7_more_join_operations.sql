@@ -90,3 +90,37 @@ WHERE actor.name = 'John Travolta'
 GROUP BY movie.yr
 HAVING COUNT(movie.title) > 2;
 
+-- # 12. List the film title and the leading actor for 
+-- all of the films 'Julie Andrews' played in.
+SELECT movie.title, actor.name
+FROM movie 
+JOIN casting on movie.id=movieid
+JOIN actor on actor.id=actorid
+WHERE ord=1
+-- a subquery that gives the movie id for movies Julie Andrew played:
+AND movie.id IN(
+                SELECT m.id as movie_id
+                FROM movie m 
+                JOIN casting ON m.id=movieid 
+                JOIN actor a on a.id=actorid
+                WHERE a.name = 'Julie Andrews'
+)
+
+-- # 13. 
+-- Obtain a list, in alphabetical order, of actors who've had at least 30 starring roles.
+-- My solution:
+-- Create a table (tab2) with columns of actor name and number of movies being star at. 
+-- Then join tab2 with "actor", and select the rows wehre tab2.star_count>=30
+SELECT actor.name
+FROM actor
+JOIN(
+    SELECT name, COUNT(name) star_count
+    FROM actor 
+    JOIN casting 
+    ON actor.id=actorid
+    WHERE ord=1
+    GROUP BY name
+    ) tab2
+ON actor.name=tab2.name
+WHERE tab2.star_count>=30
+ORDER BY actor.name
