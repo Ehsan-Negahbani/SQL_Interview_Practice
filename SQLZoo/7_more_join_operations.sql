@@ -106,8 +106,7 @@ AND movie.id IN(
                 WHERE a.name = 'Julie Andrews'
 )
 
--- # 13. 
--- Obtain a list, in alphabetical order, of actors who've had at least 30 starring roles.
+-- # 13. Obtain a list, in alphabetical order, of actors who've had at least 30 starring roles.
 -- My solution:
 -- Create a table (tab2) with columns of actor name and number of movies being star at. 
 -- Then join tab2 with "actor", and select the rows wehre tab2.star_count>=30
@@ -124,3 +123,24 @@ JOIN(
 ON actor.name=tab2.name
 WHERE tab2.star_count>=30
 ORDER BY actor.name
+
+-- # 14. List the films released in the year 1978 ordered by the number of actors in the cast, then by title.
+SELECT movie.title, COUNT(name) cast_count
+FROM movie 
+JOIN casting
+ON movie.id=movieid
+JOIN actor ON actor.id=actorid
+WHERE yr=1978
+GROUP BY movie.title
+ORDER BY cast_count desc, movie.title
+
+-- # 15. List all the people who have worked with 'Art Garfunkel'.
+SELECT name
+FROM actor  JOIN casting ON actor.id=actorid
+JOIN movie ON movie.id=movieid
+WHERE movie.id = ANY(
+SELECT movie.id 
+FROM movie  JOIN casting ON movie.id=movieid
+JOIN actor ON actor.id=actorid
+WHERE name='Art Garfunkel')
+AND name<>'Art Garfunkel'
