@@ -1,4 +1,4 @@
-
+-- ref: https://sqlzoo.net/wiki/More_JOIN_operations
 
 -- # 1. List the teachers who have NULL for their department.
 SELECT name from teacher
