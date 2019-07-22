@@ -49,14 +49,41 @@ WHERE stopa.name='Craiglockhart'
 AND stopb.name='London Road'
 
 
--- # 7. 
+-- # 7. Give a list of all the services which connect stops 115 and 137 ('Haymarket' and 'Leith')
+-- Solution from: https://github.com/mrdziuban/SQLZoo/blob/master/9_self_join.sql
+SELECT DISTINCT r1.company, r2.num
+FROM route AS r1
+JOIN route AS r2
+ON (r1.company, r1.num) = (r2.company, r2.num)
+WHERE r1.stop = 115
+AND r2.stop = 137;
 
 
--- # 8. 
+-- # 8. Give a list of the services which connect the stops 'Craiglockhart' and 'Tollcross'
+-- Solution from: https://github.com/mrdziuban/SQLZoo/blob/master/9_self_join.sql
+SELECT r1.company, r1.num
+FROM route AS r1
+JOIN route AS r2
+ON (r1.company, r1.num) = (r2.company, r2.num)
+JOIN stops AS s1
+ON r1.stop = s1.id
+JOIN stops AS s2
+ON r2.stop = s2.id
+WHERE s1.name = 'Craiglockhart'
+AND s2.name = 'Tollcross';
 
-
--- # 9. 
-
+-- # 9. Give a distinct list of the stops which may be reached from 'Craiglockhart' by taking one bus, including 'Craiglockhart' itself, offered by the LRT company. 
+-- Include the company and bus no. of the relevant services.
+-- Solution from: https://github.com/mrdziuban/SQLZoo/blob/master/9_self_join.sql
+SELECT  s2.name, r1.company, r1.num
+FROM route AS r1
+JOIN route AS r2
+ON (r1.company, r1.num) = (r2.company, r2.num)
+JOIN stops AS s1
+ON r1.stop = s1.id
+JOIN stops AS s2
+ON r2.stop = s2.id
+WHERE s1.name = 'Craiglockhart';
 
 -- # 10. 
 
