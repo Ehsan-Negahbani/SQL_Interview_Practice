@@ -138,7 +138,7 @@ WHERE Id NOT IN (
 -- | 200                 |
 -- +---------------------+
 
--- Solution1: 
+-- Solution1 (RUNTIME = 174 ms): 
 SELECT Max(Salary) as SecondHighestSalary
 FROM Employee
 WHERE Salary =ANY
@@ -152,7 +152,30 @@ WHERE Salary<
 )
 )
 
---Solution2: 
+--Solution2 (RUNTIME = 74 ms): 
+SELECT DISTINCT Salary AS SecondHighestSalary
+FROM Employee
+ORDER BY Salary DESC
+LIMIT 1 OFFSET 1
+
+-- However, this solution will be judged as 'Wrong Answer' 
+-- if there is no such second highest salary since there might be only one record in this table.
+-- To overcome this issue, we can take this as a temp table:
+
+-- Solution 3 (RUNTIME = 132 ms)
+SELECT(
+    SELECT DISTINCT Salary 
+    FROM Employee
+    ORDER BY Salary DESC
+    LIMIT 1 OFFSET 1
+    ) AS SecondHighestSalary
+    
+-- Solution 4 (RUNTIME = 139 ms)
+SELECT max(Salary) SecondHighestSalary
+FROM Employee
+WHERE Salary<(SELECT max(Salary) FROM Employee)
+
+
 
 
 
