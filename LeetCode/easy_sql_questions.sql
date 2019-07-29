@@ -178,6 +178,78 @@ WHERE Salary<(SELECT max(Salary) FROM Employee)
 
 
 
+-- # 5. Combine Two Tables
+-- Table: Person:
+-- -- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | PersonId    | int     |
+-- | FirstName   | varchar |
+-- | LastName    | varchar |
+-- +-------------+---------+
+-- PersonId is the primary key column for this table.
+
+-- Table: address
+-- +-------------+---------+
+-- | Column Name | Type    |
+-- +-------------+---------+
+-- | AddressId   | int     |
+-- | PersonId    | int     |
+-- | City        | varchar |
+-- | State       | varchar |
+-- +-------------+---------+
+-- AddressId is the primary key column for this table.
+
+-- Write a SQL query for a report that provides the following information for each person in the Person table, 
+-- regardless if there is an address for each of those people:
+
+-- FirstName, LastName, City, State
+
+-- Solution (EASY):
+SELECT FirstName, LastName, City, State
+From Person P 
+Left Join Address A
+On P.PersonId=A.PersonId
+
+
+
+-- # 6. EMPLOYEES EARNING MORE THAN THEIR MANAGERS (HARD!)
+The Employee table holds all employees including their managers. Every employee has an Id, and there is also a column for the manager Id.
+
++----+-------+--------+-----------+
+| Id | Name  | Salary | ManagerId |
++----+-------+--------+-----------+
+| 1  | Joe   | 70000  | 3         |
+| 2  | Henry | 80000  | 4         |
+| 3  | Sam   | 60000  | NULL      |
+| 4  | Max   | 90000  | NULL      |
++----+-------+--------+-----------+
+Given the Employee table, write a SQL query that finds out employees who earn more than their managers. For the above table, Joe is the only employee who earns more than his manager.
+
++----------+
+| Employee |
++----------+
+| Joe      |
++----------+
+
+-- Solution 1:
+SELECT
+    a.Name AS 'Employee'
+FROM
+    Employee AS a,
+    Employee AS b
+WHERE
+    a.ManagerId = b.Id
+        AND a.Salary > b.Salary
+
+
+-- Solution 2:
+SELECT a.Name AS Employee
+FROM Employee As a JOIN Employee AS b
+ON a.ManagerID=b.Id
+AND a.Salary>b.Salary
+
+
 
 
 
