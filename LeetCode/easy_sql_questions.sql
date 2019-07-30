@@ -214,23 +214,23 @@ On P.PersonId=A.PersonId
 
 
 -- # 6. EMPLOYEES EARNING MORE THAN THEIR MANAGERS (HARD!)
-The Employee table holds all employees including their managers. Every employee has an Id, and there is also a column for the manager Id.
+-- The Employee table holds all employees including their managers. Every employee has an Id, and there is also a column for the manager Id.
 
-+----+-------+--------+-----------+
-| Id | Name  | Salary | ManagerId |
-+----+-------+--------+-----------+
-| 1  | Joe   | 70000  | 3         |
-| 2  | Henry | 80000  | 4         |
-| 3  | Sam   | 60000  | NULL      |
-| 4  | Max   | 90000  | NULL      |
-+----+-------+--------+-----------+
-Given the Employee table, write a SQL query that finds out employees who earn more than their managers. For the above table, Joe is the only employee who earns more than his manager.
+-- +----+-------+--------+-----------+
+-- | Id | Name  | Salary | ManagerId |
+-- +----+-------+--------+-----------+
+-- | 1  | Joe   | 70000  | 3         |
+-- | 2  | Henry | 80000  | 4         |
+-- | 3  | Sam   | 60000  | NULL      |
+-- | 4  | Max   | 90000  | NULL      |
+-- +----+-------+--------+-----------+
+-- Given the Employee table, write a SQL query that finds out employees who earn more than their managers. For the above table, Joe is the only employee who earns more than his manager.
 
-+----------+
-| Employee |
-+----------+
-| Joe      |
-+----------+
+-- +----------+
+-- | Employee |
+-- +----------+
+-- | Joe      |
+-- +----------+
 
 -- Solution 1:
 SELECT
@@ -248,6 +248,42 @@ SELECT a.Name AS Employee
 FROM Employee As a JOIN Employee AS b
 ON a.ManagerID=b.Id
 AND a.Salary>b.Salary
+
+
+
+-- # 7. NOT BORING MOVIEWS
+-- X city opened a new cinema, many people would like to go to this cinema. 
+-- The cinema also gives out a poster indicating the movies’ ratings and descriptions.
+-- Please write a SQL query to output movies with an 
+-- odd numbered ID and a description that is not 'boring'. 
+-- Order the result by rating.
+-- 
+-- For example, table cinema:
+-- 
+-- +---------+-----------+--------------+-----------+
+-- |   id    | movie     |  description |  rating   |
+-- +---------+-----------+--------------+-----------+
+-- |   1     | War       |   great 3D   |   8.9     |
+-- |   2     | Science   |   fiction    |   8.5     |
+-- |   3     | irish     |   boring     |   6.2     |
+-- |   4     | Ice song  |   Fantacy    |   8.6     |
+-- |   5     | House card|   Interesting|   9.1     |
+-- +---------+-----------+--------------+-----------+
+-- For the example above, the output should be:
+-- +---------+-----------+--------------+-----------+
+-- |   id    | movie     |  description |  rating   |
+-- +---------+-----------+--------------+-----------+
+-- |   5     | House card|   Interesting|   9.1     |
+-- |   1     | War       |   great 3D   |   8.9     |
+-- +---------+-----------+--------------+-----------+
+
+-- solution 1
+SELECT * 
+FROM cinema
+WHERE id%2<>0
+-- WHERE mod(id, 2)=1
+AND description<>'boring'
+ORDER BY rating DESC
 
 
 
