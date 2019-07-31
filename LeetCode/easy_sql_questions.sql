@@ -285,6 +285,61 @@ WHERE id%2<>0
 AND description<>'boring'
 ORDER BY rating DESC
 
+-- # 8. DUPLICATE EMAILS
+-- Write a SQL query to find all duplicate emails in a table named Person.
+-- 
+-- +----+---------+
+-- | Id | Email   |
+-- +----+---------+
+-- | 1  | a@b.com |
+-- | 2  | c@d.com |
+-- | 3  | a@b.com |
+-- +----+---------+
+-- For example, your query should return the following for the above table:
+-- 
+-- +---------+
+-- | Email   |
+-- +---------+
+-- | a@b.com |
+-- +---------+
+-- Note: All emails are in lowercase.
+
+-- solution 1
+SELECT DISTINCT p1.Email
+FROM Person p1 join Person p2
+ON p1.Id<>p2.Id AND p1.Email=p2.Email
+
+-- solution 2 (sub-optimal)
+SELECT DISTINCT p1.Email
+FROM Person p1, Person p2
+WHERE p1.Id<>p2.Id AND p1.Email=p2.Email
+
+-- Solution 3 (no join)
+SELECT Email
+FROM PERSON
+GROUP BY Email
+HAVING COUNT(1) > 1
+
+
+-- # 9. RISING TEMPERATURE
+-- Given a Weather table, write a SQL query to find all dates' Ids with higher temperature compared to its previous (yesterday's) dates.
+-- 
+-- +---------+------------------+------------------+
+-- | Id(INT) | RecordDate(DATE) | Temperature(INT) |
+-- +---------+------------------+------------------+
+-- |       1 |       2015-01-01 |               10 |
+-- |       2 |       2015-01-02 |               25 |
+-- |       3 |       2015-01-03 |               20 |
+-- |       4 |       2015-01-04 |               30 |
+-- +---------+------------------+------------------+
+-- For example, return the following Ids for the above Weather table:
+-- 
+-- +----+
+-- | Id |
+-- +----+
+-- |  2 |
+-- |  4 |
+-- +----+
 
 
 
