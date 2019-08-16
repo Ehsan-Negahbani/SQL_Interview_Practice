@@ -107,3 +107,78 @@ WHERE (e1.Salary, e1.DepartmentId) = ANY(
     FROM Employee e1
     GROUP BY e1.DepartmentId
     )
+
+
+
+-- # 4. DExchange Seats
+-- Mary is a teacher in a middle school and she has a table seat storing students' names and their corresponding seat ids.
+-- The column id is continuous increment.
+-- Mary wants to change seats for the adjacent students.
+-- Can you write a SQL query to output the result for Mary?
+ 
+-- +---------+---------+
+-- |    id   | student |
+-- +---------+---------+
+-- |    1    | Abbot   |
+-- |    2    | Doris   |
+-- |    3    | Emerson |
+-- |    4    | Green   |
+-- |    5    | Jeames  |
+-- +---------+---------+
+-- For the sample input, the output is:
+ 
+
+-- +---------+---------+
+-- |    id   | student |
+-- +---------+---------+
+-- |    1    | Doris   |
+-- |    2    | Abbot   |
+-- |    3    | Green   |
+-- |    4    | Emerson |
+-- |    5    | Jeames  |
+-- +---------+---------+
+
+--Note:
+-- If the number of students is odd, there is no need to change the last one's seat.
+
+-- Solution 1 (It works, except does not return the last entry that has odd seat number)
+SELECT s1.id, s2.student
+FROM seat s1 JOIN seat s2
+ON s1.id=s2.id-1
+WHERE s1.id%2=1
+
+UNION
+SELECT s2.id, s1.student
+FROM seat s1 JOIN seat s2
+ON s1.id=s2.id-1
+WHERE s1.id%2=1
+
+ORDR By 1
+-- I can not further UNION it with a table containing only the last row (Jeames in the example above).
+-- SQL was complaining about using s1 alias in third UNION. I just changed it to s3 and it workd.
+-- Here is the solution:
+
+SELECT s1.id, s2.student -- self join, 
+FROM seat s1 JOIN seat s2
+ON s1.id=s2.id-1
+WHERE (s1.id%2=1) -- putting adjacent seats together
+
+UNION
+SELECT s2.id, s1.student -- same self join as above, but selecting difefernt elements from it
+FROM seat s1 JOIN seat s2
+ON s1.id=s2.id-1
+WHERE s1.id%2=1 -- -- putting adjacent seats together
+
+-- Third UNION concatenates the last student's details if its seat number is odd. 
+UNION
+SELECT s3.id, s3.student
+FROM seat s3
+WHERE s3.id = ( 
+    SELECT MAX(s3.id) -- subquery to find the last row in table
+    FROM seat s3
+)
+AND
+s3.id%2=1 -- check to see if seat number is odd
+
+
+ORDER BY 1
