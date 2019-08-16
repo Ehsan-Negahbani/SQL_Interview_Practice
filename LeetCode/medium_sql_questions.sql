@@ -182,3 +182,46 @@ s3.id%2=1 -- check to see if seat number is odd
 
 
 ORDER BY 1
+
+-- Leetcode has at least two alternative methods:
+-- Solution 2: Creating a new id column from old id column  using CASE command. 
+-- Add 1 if column unmber is odd, and subtract one if column number is even.
+-- The CASE command also takes care of the last element if it's id is odd:
+SELECT
+    (CASE
+        WHEN MOD(id, 2) != 0 AND counts != id THEN id + 1
+        WHEN MOD(id, 2) != 0 AND counts = id THEN id
+        ELSE id - 1
+    END) AS id,
+    student
+FROM
+    seat,
+    (SELECT
+        COUNT(*) AS counts
+    FROM
+        seat) AS seat_counts
+ORDER BY id ASC;
+
+-- Solution 3 (similar to mine, ):
+/* get all the even numbered rows as odd numbered rows */
+SELECT s1.id - 1 as id, s1.student
+FROM Seat s1
+WHERE s1.id MOD 2 = 0
+
+UNION
+
+/* get all the odd numbered rows as even numbered rows */
+SELECT s2.id + 1 as id, s2.student
+FROM Seat s2
+WHERE s2.id MOD 2 = 1 AND s2.id != (SELECT MAX(id) FROM Seat)
+/* Just don't get the last row as we will handle it in the next UNION */
+
+UNION
+
+/* get the last row if odd and don't change the id value */
+SELECT s3.id, s3.student
+FROM Seat s3
+WHERE s3.id MOD 2 = 1 AND s3.id = (SELECT MAX(id) FROM Seat)
+
+/* Order the result by id */
+ORDER BY id ASC;
