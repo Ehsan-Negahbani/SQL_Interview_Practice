@@ -1,0 +1,4 @@
+This notebook shows how to write the Pandas equivalent of some popular SQL queries.
+The content is heavily borrowed from reference below, but I have added my solutions in several places.
+
+Reference: https://medium.com/jbennetcodes/how-to-rewrite-your-sql-queries-in-pandas-and-more-149d341fc53e
