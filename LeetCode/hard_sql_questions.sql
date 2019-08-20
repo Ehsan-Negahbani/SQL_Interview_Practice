@@ -46,3 +46,22 @@
 -- | 2013-10-02 |       0.00        |
 -- | 2013-10-03 |       0.50        |
 -- +------------+-------------------+
+
+
+-- My solution (was not able to solve the problem!)
+-- This solution computes the rate without considering the 'Banned' status from 'Users' table.
+SELECT  j1.Request_at Day, (1-j1.compelete/j1.total) Cancellation_rate
+FROM(
+    SELECT tot.total, c.compelete, c.Request_at
+    From (
+        SELECT COUNT(t.Id) compelete, t.Request_at
+        FROM Trips t
+        WHERE t.Status='completed'
+        GROUP BY t.Request_at) c
+    JOIN (
+        SELECT COUNT(t.Id) total, t.Request_at
+        FROM Trips t
+        GROUP BY t.Request_at) tot
+    ON 
+        c.Request_at = tot.Request_at
+)j1
