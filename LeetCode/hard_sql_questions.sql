@@ -74,3 +74,13 @@ WHERE t.Client_Id IN (SELECT Users_Id FROM Users WHERE Banned='No')
 AND t.Driver_Id IN (SELECT Users_Id from Users where Banned='No')
 AND t.Request_at BETWEEN '2013-10-01' and '2013-10-03'
 GROUP BY t.Request_at
+
+-- solution 3 (minimal difference from solution 2)
+-- ..
+ROUND(count(CASE WHEN t.Status like 'cancelled_%' THEN True ELSE NULL END) /count(*), 2 ) 'Cancellation Rate'
+-- ''
+
+-- solution 4 (minimal difference from solution 2)
+-- ..
+ROUND(((SUM(CASE WHEN LOWER(Status) LIKE "cancelled%" THEN 1.000 ELSE 0 END)) / COUNT(id)), 2) AS "Cancellation Rate" 
+-- ''
