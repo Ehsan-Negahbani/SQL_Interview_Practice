@@ -65,3 +65,12 @@ FROM(
     ON 
         c.Request_at = tot.Request_at
 )j1
+
+-- Solution 2
+SELECT t.Request_at Day,
+    1-ROUND(count(CASE WHEN t.Status='completed' THEN True ELSE NULL END) /count(*), 2 ) 'Cancellation Rate'
+FROM Trips t 
+WHERE t.Client_Id IN (SELECT Users_Id FROM Users WHERE Banned='No')
+AND t.Driver_Id IN (SELECT Users_Id from Users where Banned='No')
+AND t.Request_at BETWEEN '2013-10-01' and '2013-10-03'
+GROUP BY t.Request_at
