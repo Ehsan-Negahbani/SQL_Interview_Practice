@@ -84,3 +84,11 @@ ROUND(count(CASE WHEN t.Status like 'cancelled_%' THEN True ELSE NULL END) /coun
 -- ..
 ROUND(((SUM(CASE WHEN LOWER(Status) LIKE "cancelled%" THEN 1.000 ELSE 0 END)) / COUNT(id)), 2) AS "Cancellation Rate" 
 -- ''
+            
+ -- Solution 5: Uses JOIN instead of subquerry
+ SELECT Request_at as Day, ROUND(SUM(t.Status != "completed") / COUNT(*), 2) as "Cancellation Rate"
+    FROM Trips t 
+    JOIN Users c ON t.Client_ID = c.Users_ID AND c.Banned = "No"
+    JOIN Users d ON t.Driver_ID = d.Users_ID AND d.Banned = "No"
+    WHERE Request_at BETWEEN "2013-10-01" AND "2013-10-03"
+    GROUP BY Request_at;
